@@ -114,33 +114,76 @@ public class JobService : IHostedService, IDisposable
 
     private async Task ProcessOrderAsync(MyDbContext context, Order order)
     {
-        order.TrackingCode = order.TrackingCode?.ToUpperInvariant();
-
-        var validationPost = await context.ValidationPost.FirstOrDefaultAsync(vp => vp.OrderId == order.OrderId);
-
-        if (order.TrackingCode?.StartsWith("NM") == false)
+        if (order == null || string.IsNullOrEmpty(order.TrackingCode))
         {
-            validationPost.SendCount = 4;
-            validationPost.Completed = 1;
-            validationPost.UpdatedAt = DateTime.Now;
-            validationPost.PostMessage = "Pedido em processo de entrega";
-            await context.SaveChangesAsync();
+            _logger.LogError("Order or TrackingCode is null.");
             return;
         }
 
-        if (validationPost != null && validationPost.Completed == 1 && validationPost.SendCount < 4)
+        order.TrackingCode = order.TrackingCode?.ToUpperInvariant();
+        if (order.TrackingCode?.StartsWith("NM") == false)
         {
-            validationPost.SendCount = 4;
+            var validationPost = await context.ValidationPost.FirstOrDefaultAsync(vp => vp.OrderId == order.OrderId);
+
+            if (validationPost == null)
+            {
+                await CreateValidationPostWithStatusAsync(context, order, "Pedido em processo de entrega", 1, 4);
+            }
+            else
+            {
+                validationPost.SendCount = 4;
+                validationPost.Completed = 1;
+                validationPost.UpdatedAt = DateTime.Now;
+                validationPost.PostMessage = "Pedido em processo de entrega";
+                await context.SaveChangesAsync();
+            }
+            return;
+        }
+
+        var existingValidationPost = await context.ValidationPost.FirstOrDefaultAsync(vp => vp.OrderId == order.OrderId);
+
+        if (existingValidationPost != null && existingValidationPost.Completed == 1 && existingValidationPost.SendCount < 4)
+        {
+            existingValidationPost.SendCount = 4;
             await context.SaveChangesAsync();
         }
 
-        var sendEmail = await ShouldSendEmailAsync(validationPost);
+        var sendEmail = await ShouldSendEmailAsync(existingValidationPost);
 
         if (sendEmail)
         {
-            await HandleEmailSendingAsync(context, order, validationPost);
+            await HandleEmailSendingAsync(context, order, existingValidationPost);
         }
     }
+
+    private async Task CreateValidationPostWithStatusAsync(MyDbContext context, Order order, string statusName, int completed, int sendCount)
+    {
+        if (await context.ValidationPost.AnyAsync(vp => vp.OrderId == order.OrderId))
+        {
+            return;
+        }
+
+        string emailBody = await GenerateEmailBody(DateTime.Now, statusName, sendCount, order.TrackingCode);
+        bool emailSent = SendEmail(order.UserEmail, "Status do seu pedido", emailBody, order.TrackingCode);
+
+        if (emailSent)
+        {
+            await context.ValidationPost.AddAsync(new ValidationPost
+            {
+                OrderId = order.OrderId,
+                SendCount = sendCount,
+                Completed = completed,
+                CreatedAt = DateTime.Now,
+                UpdatedAt = DateTime.Now,
+                PostMessage = statusName
+            });
+
+            _logger.LogWarning("E-mail enviado para " + order.UserEmail);
+
+            await context.SaveChangesAsync();
+        }
+    }
+
 
     private async Task<bool> ShouldSendEmailAsync(ValidationPost validationPost)
     {
