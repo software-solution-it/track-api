@@ -24,14 +24,6 @@ public class JobService : IHostedService, IDisposable
         _logger = logger;
     }
 
-    public ValidationPost GetJobByOrderId(int orderId)
-    {
-        using var scope = _services.CreateScope();
-        var context = scope.ServiceProvider.GetRequiredService<MyDbContext>();
-        return context.ValidationPost.FirstOrDefault(job => job.OrderId == orderId);
-    }
-
-
     public Task StartAsync(CancellationToken cancellationToken)
     {
         _logger.LogInformation("JobService is starting.");
@@ -122,7 +114,7 @@ public class JobService : IHostedService, IDisposable
     private async Task ProcessOrderAsync(MyDbContext context, Order order)
     {
         order.TrackingCode = order.TrackingCode?.ToUpperInvariant();
-        if (order.TrackingCode?.StartsWith("LP") == true)
+        if (order.TrackingCode?.StartsWith("NM") == false)
         {
             return;
         }
