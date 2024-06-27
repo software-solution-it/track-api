@@ -24,6 +24,7 @@ namespace track_api
 
             services.AddHttpClient();
             services.AddHostedService<JobService>();
+            services.AddSingleton<JobService>();
             services.AddControllers();
             services.AddEndpointsApiExplorer();
             services.AddSwaggerGen();
