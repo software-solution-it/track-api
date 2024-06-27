@@ -113,7 +113,6 @@ public class JobService : IHostedService, IDisposable
                     AND p.post_status IN ('wc-processing', 'wc-completed')
                     AND pm1.meta_key = '_correios_tracking_code'
                     AND oim_meta.meta_key = '_product_id'
-                    AND p.post_date >= DATE_SUB(CURDATE(), INTERVAL 30 DAY)
                     AND (vp.completed IS NULL OR vp.completed = 0)
                 ORDER BY
                     p.post_date DESC")
