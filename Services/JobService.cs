@@ -114,12 +114,18 @@ public class JobService : IHostedService, IDisposable
     private async Task ProcessOrderAsync(MyDbContext context, Order order)
     {
         order.TrackingCode = order.TrackingCode?.ToUpperInvariant();
-        if (order.TrackingCode?.StartsWith("NM") == false)
-        {
-            return;
-        }
 
         var validationPost = await context.ValidationPost.FirstOrDefaultAsync(vp => vp.OrderId == order.OrderId);
+
+        if (order.TrackingCode?.StartsWith("NM") == false)
+        {
+            validationPost.SendCount = 4;
+            validationPost.Completed = 1;
+            validationPost.UpdatedAt = DateTime.Now;
+            validationPost.PostMessage = "Pedido em processo de entrega";
+            await context.SaveChangesAsync();
+            return;
+        }
 
         if (validationPost != null && validationPost.Completed == 1 && validationPost.SendCount < 4)
         {
