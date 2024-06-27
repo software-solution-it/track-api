@@ -4,6 +4,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using track_api.Models;
+using track_api.Services;
 
 namespace track_api
 {
@@ -23,8 +24,8 @@ namespace track_api
                 new MySqlServerVersion(new Version(8, 0, 21))));
 
             services.AddHttpClient();
+            services.AddTransient<GetTrackService>();
             services.AddHostedService<JobService>();
-            services.AddSingleton<JobService>();
             services.AddControllers();
             services.AddEndpointsApiExplorer();
             services.AddSwaggerGen();
