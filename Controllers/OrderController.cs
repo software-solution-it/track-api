@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using track_api.Services;
 
 namespace track_api.Controllers
 {
@@ -6,18 +7,18 @@ namespace track_api.Controllers
     [Route("[controller]")]
     public class JobController : ControllerBase
     {
-        private readonly JobService _jobService;
+        private readonly GetTrackService _getTrackService;
 
-        public JobController(JobService jobService)
+        public JobController(GetTrackService getTrackService)
         {
-            _jobService = jobService;
+            _getTrackService = getTrackService;
         }
 
 
         [HttpGet("{orderId}")]
         public IActionResult GetJobByOrderId(int orderId)
         {
-            var job = _jobService.GetJobByOrderId(orderId);
+            var job = _getTrackService.GetJobByOrderId(orderId);
             if (job == null)
             {
                 return NotFound($"Job with OrderId: {orderId} not found.");
