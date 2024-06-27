@@ -10,6 +10,7 @@ using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using track_api.Models;
 using static System.Reflection.Metadata.BlobBuilder;
+using static Org.BouncyCastle.Crypto.Engines.SM2Engine;
 
 public class JobService : IHostedService, IDisposable
 {
@@ -350,7 +351,7 @@ public class JobService : IHostedService, IDisposable
             };
 
             smtp.Send(message);
-            _logger.LogInformation("Email sent successfully to " + to + "with code " + code);
+            _logger.LogInformation("Email sent successfully to " + to + " with code " + code);
             return true;
         }
         catch (SmtpException ex)
