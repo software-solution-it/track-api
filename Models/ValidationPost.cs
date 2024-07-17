@@ -27,4 +27,20 @@ public class ValidationPost
 
     [Column("updated_at")]
     public DateTime UpdatedAt { get; set; }
+
 }
+
+
+
+public class ValidationGetDto
+{
+    public int Id { get; set; }
+    public int OrderId { get; set; }
+    public int SendCount { get; set; }
+    public bool Completed { get; set; }
+    public string PostMessage { get; set; }
+    public DateTime CreatedAt { get; set; }
+    public DateTime UpdatedAt { get; set; }
+    public string TrackingNumber { get; set; }
+}
+

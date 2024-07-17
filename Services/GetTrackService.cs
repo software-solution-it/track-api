@@ -1,4 +1,7 @@
-﻿namespace track_api.Services
+﻿using Microsoft.EntityFrameworkCore;
+using track_api.Models;
+
+namespace track_api.Services
 {
     public class GetTrackService
     {
@@ -17,6 +20,19 @@
             using var scope = _services.CreateScope();
             var context = scope.ServiceProvider.GetRequiredService<MyDbContext>();
             return context.ValidationPost.FirstOrDefault(job => job.OrderId == orderId);
+        }
+
+
+        public async Task<string> GetTrackingCode(int orderId)
+        {
+            using var scope = _services.CreateScope();
+            var context = scope.ServiceProvider.GetRequiredService<MyDbContext>();
+            var trackingCode = context.WpPostMeta
+                .Where(pm => pm.PostId == orderId && pm.MetaKey == "_correios_tracking_code")
+                .Select(pm => pm.MetaValue)
+                .FirstOrDefault();
+
+            return trackingCode;
         }
     }
 }

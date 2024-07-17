@@ -1,0 +1,32 @@
+# Arquivos de compilação gerados
+bin/
+obj/
+
+# Arquivos de configuração
+*.user
+*.suo
+*.cache
+*.pdb
+
+# Logs e arquivos temporários
+*.log
+*.vscode/
+*.vs/
+*.sln.docstates
+
+# Pacotes NuGet
+packages/
+
+# Arquivos de build do Visual Studio
+*.dll
+*.exe
+*.tmp
+*.o
+*.so
+*.a
+*.lib
+*.dll.config
+
+# Arquivos específicos de IDEs
+*.idea/
+*.vscode/

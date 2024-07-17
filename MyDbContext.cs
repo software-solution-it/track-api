@@ -9,7 +9,14 @@ public class MyDbContext : DbContext
     }
 
     public DbSet<Order> Order { get; set; }
+
+    public DbSet<WpPost> WpPost { get; set; }
+
+    public DbSet<WpPostMeta> WpPostMeta { get; set; }
+
     public DbSet<ValidationPost> ValidationPost { get; set; }
+
+    public DbSet<ValidationGetDto> ValidationGetDto { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {

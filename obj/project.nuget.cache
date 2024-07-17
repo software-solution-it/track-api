@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "bxSgw2yKMc5EgdrKvnI1+ZeAUbgU3PCBFO8TKurak2dxJc6LXs+ZhwWU9FHfTtFQ+P4T7NGhIBbCrgNFWPnejg==",
+  "dgSpecHash": "Qq/i++SEiIeUcRjUHkz4lzTVFdeYBxeVBRP7MOed+Flhdr13haoqKtLYxVtTqv5AaXT/0RJjwsPt63p86rMpiQ==",
   "success": true,
-  "projectFilePath": "C:\\Users\\conta\\OneDrive\\Área de Trabalho\\track-api\\track-api\\track-api.csproj",
+  "projectFilePath": "C:\\Users\\conta\\OneDrive\\Área de Trabalho\\track-api\\track-api\\2\\track-api\\track-api.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\conta\\.nuget\\packages\\bouncycastle.cryptography\\2.3.1\\bouncycastle.cryptography.2.3.1.nupkg.sha512",
     "C:\\Users\\conta\\.nuget\\packages\\mailkit\\4.6.0\\mailkit.4.6.0.nupkg.sha512",
